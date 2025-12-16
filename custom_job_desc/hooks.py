@@ -9,21 +9,6 @@ fixtures = [
     {
         "dt": "Custom Field",
         "filters": [
-            ["dt", "=", "Sales Order"],
-            ["module", "=", "custom job description"]
-        ]
-    },
-    {
-        "dt": "Custom Field",
-        "filters": [
-            ["dt", "=", "Sales Invoice"],
-            ["module", "=", "custom job description"]
-        ]
-    },
-    {
-        "dt": "Custom Field",
-        "filters": [
-            ["dt", "=", "Sales Invoice Item"],
             ["module", "=", "custom job description"]
         ]
     }
