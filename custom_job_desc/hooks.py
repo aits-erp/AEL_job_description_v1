@@ -5,7 +5,6 @@ app_description = "sales order customization with job desc tabs"
 app_email = "nikhil@aitsind.com"
 app_license = "mit"
 
-
 fixtures = [
     {
         "dt": "Custom Field",
@@ -13,9 +12,22 @@ fixtures = [
             ["dt", "=", "Sales Order"],
             ["module", "=", "custom job description"]
         ]
+    },
+    {
+        "dt": "Custom Field",
+        "filters": [
+            ["dt", "=", "Sales Invoice"],
+            ["module", "=", "custom job description"]
+        ]
+    },
+    {
+        "dt": "Custom Field",
+        "filters": [
+            ["dt", "=", "Sales Invoice Item"],
+            ["module", "=", "custom job description"]
+        ]
     }
 ]
-
 
 # Apps
 # ------------------
