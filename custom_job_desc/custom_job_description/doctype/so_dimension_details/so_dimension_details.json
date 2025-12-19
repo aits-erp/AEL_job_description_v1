@@ -1,0 +1,69 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-12-19 07:04:32.492059",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "no_of_boxes",
+  "length_cm",
+  "breadth_cm",
+  "height_cm",
+  "cbm",
+  "weight_kg",
+  "volume_weight"
+ ],
+ "fields": [
+  {
+   "fieldname": "no_of_boxes",
+   "fieldtype": "Int",
+   "label": "No. of Boxes"
+  },
+  {
+   "fieldname": "length_cm",
+   "fieldtype": "Float",
+   "label": "Length (cm)"
+  },
+  {
+   "fieldname": "breadth_cm",
+   "fieldtype": "Float",
+   "label": "Breadth (cm)"
+  },
+  {
+   "fieldname": "height_cm",
+   "fieldtype": "Float",
+   "label": "Height (cm)"
+  },
+  {
+   "fieldname": "cbm",
+   "fieldtype": "Float",
+   "label": "CBM"
+  },
+  {
+   "fieldname": "weight_kg",
+   "fieldtype": "Float",
+   "label": "Weight (kg)"
+  },
+  {
+   "fieldname": "volume_weight",
+   "fieldtype": "Float",
+   "label": "Volume Weight"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-12-19 07:14:39.779536",
+ "modified_by": "Administrator",
+ "module": "custom job description",
+ "name": "SO Dimension details",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
