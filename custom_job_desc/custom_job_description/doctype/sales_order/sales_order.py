@@ -139,6 +139,7 @@ def map_parent_fields_so_to_si(source, target, source_parent=None):
         # -------- DATES --------
         "custom_eta": "custom_eta",
         "custom_etd": "custom_etd",
+        "custom_mode": "custom_cargo_type",
 
     }
 
