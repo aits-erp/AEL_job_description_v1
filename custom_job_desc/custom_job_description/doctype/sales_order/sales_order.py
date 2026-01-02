@@ -142,7 +142,8 @@ def map_parent_fields_so_to_si(source, target, source_parent=None):
         "custom_mode": "custom_cargo_type",
         "custom_mbl_no": "custom_mawb_no",
         "custom_hbl_no": "custom_hawb_no",
-
+        "custom_mbl_date": "custom_mawb_date",
+        "custom_hbl_date": "custom_hawb_date",
 
     }
 
