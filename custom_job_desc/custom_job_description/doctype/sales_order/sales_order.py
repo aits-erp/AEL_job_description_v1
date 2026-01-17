@@ -19,7 +19,7 @@ class SalesOrder(Document):
         self.sync_standard_rate_from_custom_total()
 
         # 5. Parent custom INR total (for reference / print)
-        self.update_custom_total_parent()
+        # self.update_custom_total_parent()
 
     # -----------------------------------------------------------
     # ITEM TOTAL CALCULATIONS (BUSINESS LOGIC)
@@ -32,16 +32,18 @@ class SalesOrder(Document):
             exchange_rate = flt(item.custom_exchange_rate or 1)
 
             # ---------- FORMULA PATH ----------
-            if item.custom_formula:
+            if item.custom_formulaa:
                 calculated = None
 
+                totals = self.get_effective_totals()
+
                 if mode in ("SEA - LCL IMPORT", "SEA - LCL EXPORT"):
-                    calculated = flt(self.custom_total_cbm) * user_rate
+                    calculated = totals["cbm"] * user_rate
 
                 elif mode in ("AIR - IMPORT", "AIR - EXPORT"):
                     chargeable_weight = max(
-                        flt(self.custom_total_weight),
-                        flt(self.custom_total_volume_weight)
+                        totals["weight"],
+                        totals["volume_weight"]
                     )
                     calculated = chargeable_weight * user_rate
 
@@ -49,7 +51,7 @@ class SalesOrder(Document):
                     item.custom_total = calculated
 
             # ---------- MANUAL PATH ----------
-            # If custom_formula is OFF, user is expected to manually enter custom_total
+            # If custom_formulaa is OFF, user is expected to manually enter custom_total
 
             # ---------- INR CONVERSION ----------
             item.custom_total_value = flt(item.custom_total or 0) * exchange_rate
@@ -116,11 +118,39 @@ class SalesOrder(Document):
     # -----------------------------------------------------------
     # PARENT CUSTOM INR TOTAL (REFERENCE)
     # -----------------------------------------------------------
-    def update_custom_total_parent(self):
-        self.custom_total_inr = sum(
-            flt(item.custom_total_in_inr or 0)
-            for item in self.items
-        )
+    # def update_custom_total_parent(self):
+    #     self.custom_total_inr = sum(
+    #         flt(item.custom_total_in_inr or 0)
+    #         for item in self.items
+    #     )
+
+    def get_effective_totals(self):
+        """
+        Decide whether to use dimension totals
+        or manually entered totals.
+        """
+
+        has_dimensions = False
+
+        for row in (self.custom_dimension_table or []):
+            if flt(row.cbm or 0) > 0 or flt(row.weight_kg or 0) > 0:
+                has_dimensions = True
+                break
+
+        if has_dimensions:
+            return {
+                "cbm": flt(self.custom_total_cbm),
+                "weight": flt(self.custom_total_weight),
+                "volume_weight": flt(self.custom_total_volume_weight),
+            }
+
+        # fallback to manual values
+        return {
+            "cbm": flt(self.custom_totals_in_cbm),
+            "weight": flt(self.custom_gross_weight),
+            "volume_weight": flt(self.custom_total_volume_weight),
+        }
+
 
 def map_parent_fields_so_to_si(source, target, source_parent=None):
     """
@@ -135,6 +165,7 @@ def map_parent_fields_so_to_si(source, target, source_parent=None):
 
         # -------- COUNTRY --------
         "custom_country_origin": "custom_country_of_origin",
+        "custom_country_destination": "custom_country_of_destination",
 
         # -------- DATES --------
         "custom_eta": "custom_eta",
@@ -144,6 +175,12 @@ def map_parent_fields_so_to_si(source, target, source_parent=None):
         "custom_hbl_no": "custom_hawb_no",
         "custom_mbl_date": "custom_mawb_date",
         "custom_hbl_date": "custom_hawb_date",
+        "custom_shipper": "custom_shipper",
+        "custom_consignee": "custom_reciver",
+        "custom_po_number": "custom_po_no",
+        "custom_vessel": "custom_vesselflight_name",
+        "custom_bl_ref_no": "custom_bl_ref_no",
+
 
     }
 
@@ -186,7 +223,7 @@ def make_sales_invoice(source_name, target_doc=None):
             # -------- DIMENSION TABLE --------
             "SO Dimension details": {
                 "doctype": "SI Dimension Details",
-                "parent_field": "custom_dimension_details",
+                "parent_field": "custom_dimension_table",
                 "postprocess": map_dimension_child_so_to_si,
             },
         },

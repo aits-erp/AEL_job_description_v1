@@ -30,8 +30,7 @@ class SalesInvoice(Document):
             user_rate = flt(item.custom_custom_rate or 0)
             exchange_rate = flt(item.custom_exchange_rate or 1)
 
-            # ---------- FORMULA PATH ----------
-            if item.custom_formula:
+            if self.is_formula_enabled(item):
                 calculated = None
 
                 if mode in ("SEA - LCL IMPORT", "SEA - LCL EXPORT"):
@@ -47,10 +46,6 @@ class SalesInvoice(Document):
                 if calculated is not None:
                     item.custom_total = calculated
 
-            # ---------- MANUAL PATH ----------
-            # If custom_formula is OFF, user is expected to manually enter custom_total
-
-            # ---------- INR CONVERSION ----------
             item.custom_total_value = flt(item.custom_total or 0) * exchange_rate
             item.custom_total_in_inr = item.custom_total_value
 
@@ -115,8 +110,11 @@ class SalesInvoice(Document):
     # -----------------------------------------------------------
     # PARENT CUSTOM INR TOTAL (REFERENCE)
     # -----------------------------------------------------------
-    def update_custom_total_parent(self):
-        self.custom_total_inr = sum(
-            flt(item.custom_total_in_inr or 0)
-            for item in self.items
-        )
+    # def update_custom_total_parent(self):
+    #     self.custom_total_inr = sum(
+    #         flt(item.custom_total_in_inr or 0)
+    #         for item in self.items
+    #     )
+
+    def is_formula_enabled(self, item):
+        return flt(item.custom_formulaa) == 1
